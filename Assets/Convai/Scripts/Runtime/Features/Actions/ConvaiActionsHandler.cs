@@ -19,7 +19,8 @@ namespace Convai.Scripts.Runtime.Features
         Crouch,
         MoveTo,
         PickUp,
-        Drop
+        Drop,
+        Grab
     }
 
     /// <summary>
@@ -34,6 +35,7 @@ namespace Convai.Scripts.Runtime.Features
         public List<string> actionResponseList = new();
         private readonly List<ConvaiAction> _actionList = new();
         public readonly ActionConfig ActionConfig = new();
+        public Transform grabAttachPoint;
         private List<string> _actions = new();
         private ConvaiNPC _currentNPC;
         private ConvaiInteractablesData _interactablesData;
@@ -335,6 +337,10 @@ namespace Convai.Scripts.Runtime.Features
                 case ActionChoice.Crouch:
                     // Call the Crouch function and yield until it's completed
                     yield return Crouch();
+                    break;
+                
+                case ActionChoice.Grab:
+                    yield return Grab(action.Target);
                     break;
 
                 case ActionChoice.None:
@@ -755,6 +761,67 @@ namespace Convai.Scripts.Runtime.Features
             // Invoke the ActionEnded event with the "PickUp" action and the target GameObject.
             ActionEnded?.Invoke("PickUp", target);
         }
+        
+        private IEnumerator Grab(GameObject target)
+        {
+            ActionStarted?.Invoke("Grab", target);
+
+            if (target == null)
+            {
+                ConvaiLogger.DebugLog("Target is null! Exiting Grab coroutine.", ConvaiLogger.LogCategory.Actions);
+                yield break;
+            }
+
+            if (!target.activeInHierarchy)
+            {
+                ConvaiLogger.DebugLog($"Target: {target.name} is inactive! Exiting Grab coroutine.", ConvaiLogger.LogCategory.Actions);
+                yield break;
+            }
+
+            Vector3 direction = (target.transform.position - transform.position).normalized;
+            direction.y = 0;
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            float elapsedTime = 0f;
+            float rotationTime = 0.5f;
+
+            while (elapsedTime < rotationTime)
+            {
+                targetRotation.x = 0;
+                targetRotation.z = 0;
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, elapsedTime / rotationTime);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            ConvaiLogger.DebugLog($"Grabbing Target: {target.name}", ConvaiLogger.LogCategory.Actions);
+
+            Animator animator = _currentNPC.GetComponent<Animator>();
+            animator.CrossFade(Animator.StringToHash("Grabbing"), 0.1f);
+
+            yield return new WaitForSeconds(1);
+
+            float timeToReachObject = 1f;
+            yield return new WaitForSeconds(timeToReachObject);
+
+            if (!target.activeInHierarchy)
+            {
+                ConvaiLogger.DebugLog($"Target: {target.name} became inactive during the grab animation! Exiting Grab coroutine.", ConvaiLogger.LogCategory.Actions);
+                yield break;
+            }
+
+            target.transform.SetParent(grabAttachPoint);
+            target.transform.localPosition = Vector3.zero;
+            target.transform.localRotation = Quaternion.identity;
+
+            if (target.TryGetComponent<Rigidbody>(out var rb))
+            {
+                rb.isKinematic = true;
+            }
+
+            animator.CrossFade(Animator.StringToHash("Idle"), 0.4f);
+
+            ActionEnded?.Invoke("Grab", target);
+        }
 
         private void Drop(GameObject target)
         {
@@ -765,6 +832,11 @@ namespace Convai.Scripts.Runtime.Features
             ConvaiLogger.DebugLog($"Dropping Target: {target.name}", ConvaiLogger.LogCategory.Actions);
             target.transform.parent = null;
             target.SetActive(true);
+            
+            if (target.TryGetComponent<Rigidbody>(out var rb))
+            {
+                rb.isKinematic = false;
+            }
 
             ActionEnded?.Invoke("Drop", target);
         }
