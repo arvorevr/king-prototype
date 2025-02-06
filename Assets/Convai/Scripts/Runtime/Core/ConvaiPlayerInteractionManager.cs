@@ -46,7 +46,7 @@ namespace Convai.Scripts.Runtime.Core
             if (inputFieldInScene != null && _currentInputField != inputFieldInScene) _currentInputField = inputFieldInScene;
         }
 
-        private void HandleInputSubmission(string input)
+        public void HandleInputSubmission(string input)
         {
             if (!_convaiNPC.isCharacterActive || string.IsNullOrEmpty(input.Trim())) return;
             _convaiNPC.InterruptCharacterSpeech();
