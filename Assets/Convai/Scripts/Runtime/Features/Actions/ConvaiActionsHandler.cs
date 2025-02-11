@@ -20,7 +20,8 @@ namespace Convai.Scripts.Runtime.Features
         MoveTo,
         PickUp,
         Drop,
-        Grab
+        Grab,
+        TalkTo
     }
 
     /// <summary>
@@ -40,11 +41,15 @@ namespace Convai.Scripts.Runtime.Features
         private ConvaiNPC _currentNPC;
         private ConvaiInteractablesData _interactablesData;
         private Coroutine _playActionListCoroutine;
+        [SerializeField] private NPC2NPCConversationManager _npcConversationManager;
+        private bool _isMovingToDestination;
+        private ConvaiGRPCAPI _convaiManager;
 
         // Awake is called when the script instance is being loaded
         private void Awake()
         {
             // Find the global action settings object in the scene
+            _convaiManager = FindObjectOfType<ConvaiGRPCAPI>();
             _interactablesData = FindObjectOfType<ConvaiInteractablesData>();
 
             // Check if the global action settings object is missing
@@ -342,6 +347,10 @@ namespace Convai.Scripts.Runtime.Features
                 case ActionChoice.Grab:
                     yield return Grab(action.Target);
                     break;
+                
+                case ActionChoice.TalkTo:
+                    Talk(action.Target);
+                    break;
 
                 case ActionChoice.None:
                     // Call the AnimationActions function and yield until it's completed
@@ -628,6 +637,7 @@ namespace Convai.Scripts.Runtime.Features
             float rotationSpeed = 5;
             while (navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance)
             {
+                _isMovingToDestination = true;
                 if (!target.activeInHierarchy)
                 {
                     ConvaiLogger.DebugLog("Target deactivated during movement.", ConvaiLogger.LogCategory.Actions);
@@ -654,6 +664,7 @@ namespace Convai.Scripts.Runtime.Features
             animator.CrossFade(Animator.StringToHash("Idle"), 0.1f);
             if (_actions.Count == 1 && Camera.main != null) StartCoroutine(RotateTowardsCamera());
             animator.applyRootMotion = true;
+            _isMovingToDestination = false;
             ActionEnded?.Invoke("MoveTo", target);
         }
 
@@ -821,6 +832,37 @@ namespace Convai.Scripts.Runtime.Features
             animator.CrossFade(Animator.StringToHash("Idle"), 0.4f);
 
             ActionEnded?.Invoke("Grab", target);
+        }
+        
+        private void Talk(GameObject target)
+        {
+            if (target == null)
+            {
+                ConvaiLogger.DebugLog("Target is null! Exiting Talk coroutine.", ConvaiLogger.LogCategory.Actions);
+                return;
+            }
+
+            ConvaiLogger.DebugLog($"Talking to Target: {target.name}", ConvaiLogger.LogCategory.Actions);
+
+            if (_npcConversationManager != null)
+            {
+                var npcGroupController1 = GetComponent<ConvaiGroupNPCController>();
+                var npcGroupController2 = target.GetComponent<ConvaiGroupNPCController>();
+                var npcGroup = new NPCGroup(npcGroupController1, npcGroupController2);
+                _npcConversationManager.npcGroups.Add(npcGroup);
+                npcGroupController1.enabled = true;
+                npcGroupController2.enabled = true;
+                // var npcGroup = _npcConversationManager
+                //     .npcGroups
+                //     .FirstOrDefault(x => x.GroupNPC1.gameObject.GetInstanceID() == target.GetInstanceID() || x.GroupNPC2.gameObject.GetInstanceID() == target.GetInstanceID());
+
+                if (npcGroup != null)
+                {
+                    npcGroup.topic = _convaiManager.UserText;
+                    _npcConversationManager.gameObject.SetActive(true);
+                    _npcConversationManager.enabled = true;
+                }
+            }
         }
 
         private void Drop(GameObject target)

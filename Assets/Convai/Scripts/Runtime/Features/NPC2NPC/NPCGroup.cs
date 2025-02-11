@@ -21,6 +21,12 @@ namespace Convai.Scripts.Runtime.Features
 
         public ConvaiGroupNPCController CurrentSpeaker { get; set; }
         public ConvaiGroupNPCController CurrentListener => CurrentSpeaker == GroupNPC1 ? GroupNPC2 : GroupNPC1;
+        
+        public NPCGroup(ConvaiGroupNPCController groupNPC1, ConvaiGroupNPCController groupNPC2)
+        {
+            GroupNPC1 = groupNPC1;
+            GroupNPC2 = groupNPC2;
+        }
 
         public void Initialize(Action<bool, ConvaiGroupNPCController> vicinityChangedCallback)
         {

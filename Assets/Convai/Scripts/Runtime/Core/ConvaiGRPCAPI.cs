@@ -37,6 +37,7 @@ namespace Convai.Scripts.Runtime.Core
         private ConvaiChatUIHandler _chatUIHandler;
         private string _currentTranscript;
         private string _isFinalUserQueryTextBuffer = "";
+        public string UserText { get; private set; }
 
         private void Awake()
         {
@@ -221,6 +222,8 @@ namespace Convai.Scripts.Runtime.Core
                     }
                 });
                 await call.RequestStream.CompleteAsync();
+                
+                UserText = userText;
 
                 // Store the task that receives results from the server.
                 Task receiveResultsTask = Task.Run(

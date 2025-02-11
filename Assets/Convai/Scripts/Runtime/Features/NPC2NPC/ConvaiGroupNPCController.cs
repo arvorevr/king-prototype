@@ -190,7 +190,7 @@ namespace Convai.Scripts.Runtime.Features
 
         public bool IsOtherNPCTalking()
         {
-            return otherNPC.ConvaiNPC.IsCharacterTalking;
+            return otherNPC && otherNPC.ConvaiNPC.IsCharacterTalking;
         }
 
         #region Serialized Fields
