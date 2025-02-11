@@ -755,6 +755,21 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7113444386747897357, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
   m_PrefabInstance: {fileID: 1762783168}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &283639900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25290588}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74d3f2dd15d074a429eeea8c31f80b13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speechBubblePrefab: {fileID: 1281558793}
+  playerTransform: {fileID: 1157219305}
+  conversationDistanceThreshold: 5
 --- !u!1 &344304332
 GameObject:
   m_ObjectHideFlags: 0
@@ -3383,6 +3398,10 @@ PrefabInstance:
       value: Bishop Osgood
       objectReference: {fileID: 0}
     - target: {fileID: 4643839334253854785, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
+      propertyPath: _npcConversationManager
+      value: 
+      objectReference: {fileID: 1303586609}
+    - target: {fileID: 4643839334253854785, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
       propertyPath: actionMethods.Array.size
       value: 5
       objectReference: {fileID: 0}
@@ -3448,7 +3467,10 @@ PrefabInstance:
     - {fileID: 1415339575183427384, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5889922259804093746, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 283639900}
   m_SourcePrefab: {fileID: 100100000, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
 --- !u!1 &1910847927
 GameObject:
