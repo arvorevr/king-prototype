@@ -206,7 +206,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4157807364306748995, guid: 26b8f83de69b781429b938df5cc6516b, type: 3}
       propertyPath: Characters.Array.data[1].Name
-      value: Bishop Osgood
+      value: Bishop Oswald
       objectReference: {fileID: 0}
     - target: {fileID: 4157807364306748995, guid: 26b8f83de69b781429b938df5cc6516b, type: 3}
       propertyPath: Characters.Array.data[2].Name
@@ -214,7 +214,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4157807364306748995, guid: 26b8f83de69b781429b938df5cc6516b, type: 3}
       propertyPath: Characters.Array.data[3].Name
-      value: Mister Grimbles
+      value: Billy
       objectReference: {fileID: 0}
     - target: {fileID: 4157807364306748995, guid: 26b8f83de69b781429b938df5cc6516b, type: 3}
       propertyPath: Characters.Array.data[4].Name
@@ -486,13 +486,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 198752173227353153, guid: 26126a81b94901944a4b06b9c0777998, type: 3}
+      propertyPath: characterName
+      value: Mister Billy
+      objectReference: {fileID: 0}
     - target: {fileID: 603778653417262933, guid: 26126a81b94901944a4b06b9c0777998, type: 3}
       propertyPath: m_Name
-      value: Mister Grimbles
-      objectReference: {fileID: 0}
-    - target: {fileID: 3309303933968811330, guid: 26126a81b94901944a4b06b9c0777998, type: 3}
-      propertyPath: m_Enabled
-      value: 0
+      value: Mister Billy
       objectReference: {fileID: 0}
     - target: {fileID: 3309303933968811330, guid: 26126a81b94901944a4b06b9c0777998, type: 3}
       propertyPath: playerTransform
@@ -755,21 +755,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7113444386747897357, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
   m_PrefabInstance: {fileID: 1762783168}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &283639900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 25290588}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74d3f2dd15d074a429eeea8c31f80b13, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speechBubblePrefab: {fileID: 1281558793}
-  playerTransform: {fileID: 1157219305}
-  conversationDistanceThreshold: 5
 --- !u!1 &344304332
 GameObject:
   m_ObjectHideFlags: 0
@@ -922,18 +907,6 @@ PrefabInstance:
       propertyPath: _npcConversationManager
       value: 
       objectReference: {fileID: 1303586609}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.size
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[6].action
-      value: Talk To
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[6].actionChoice
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 6880649847875947248, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -972,14 +945,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6880649847875947248, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7361562214379969423, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: m_Radius
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7696875658246764828, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7696875658246764828, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
@@ -2461,10 +2426,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5347862988881951538, guid: d07efef6a909cd145ace6eefc748a580, type: 3}
-      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
-      value: 1801810542
-      objectReference: {fileID: 0}
     - target: {fileID: 7049836135868061603, guid: d07efef6a909cd145ace6eefc748a580, type: 3}
       propertyPath: m_Name
       value: Speech Bubble
@@ -3390,37 +3351,25 @@ PrefabInstance:
     m_TransformParent: {fileID: 1953931109}
     m_Modifications:
     - target: {fileID: 4374960569970212778, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
-      propertyPath: characterID
-      value: 75cec5e6-e3df-11ef-b512-42010a7be016
-      objectReference: {fileID: 0}
-    - target: {fileID: 4374960569970212778, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
       propertyPath: characterName
-      value: Bishop Osgood
+      value: Bishop Oswald
       objectReference: {fileID: 0}
     - target: {fileID: 4643839334253854785, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
       propertyPath: _npcConversationManager
       value: 
       objectReference: {fileID: 1303586609}
-    - target: {fileID: 4643839334253854785, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
-      propertyPath: actionMethods.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4643839334253854785, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
-      propertyPath: actionMethods.Array.data[5].action
-      value: Grab
-      objectReference: {fileID: 0}
-    - target: {fileID: 4643839334253854785, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
-      propertyPath: actionMethods.Array.data[5].actionChoice
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 5889922259804093746, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
       propertyPath: m_Name
-      value: Convai NPC Steve
+      value: Convai NPC Oswald
       objectReference: {fileID: 0}
-    - target: {fileID: 7113444386747897357, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
-      propertyPath: m_RootOrder
-      value: -1
-      objectReference: {fileID: 0}
+    - target: {fileID: 6110071568190479217, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
+      propertyPath: playerTransform
+      value: 
+      objectReference: {fileID: 1157219305}
+    - target: {fileID: 6110071568190479217, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
+      propertyPath: speechBubblePrefab
+      value: 
+      objectReference: {fileID: 1281558793}
     - target: {fileID: 7113444386747897357, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -13.02
@@ -3461,16 +3410,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1214728672610371753, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
-    - {fileID: 5158954159274482942, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
-    - {fileID: 1415339575183427384, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5889922259804093746, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 283639900}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56cfe70dc09a93146a7cec3da81e844f, type: 3}
 --- !u!1 &1910847927
 GameObject:

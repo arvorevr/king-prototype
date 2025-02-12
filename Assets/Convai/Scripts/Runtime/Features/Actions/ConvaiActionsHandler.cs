@@ -580,7 +580,8 @@ namespace Convai.Scripts.Runtime.Features
         private IEnumerator MoveTo(GameObject target)
         {
             if (!IsTargetValid(target)) yield break;
-
+            
+            ConvaiNPCManager.Instance.StopRaycast = true;
             ConvaiLogger.DebugLog($"Moving to Target: {target.name}", ConvaiLogger.LogCategory.Actions);
             ActionStarted?.Invoke("MoveTo", target);
 
@@ -596,6 +597,7 @@ namespace Convai.Scripts.Runtime.Features
             yield return MoveTowardsTarget(target, navMeshAgent);
 
             FinishMovement(animator, target);
+            ConvaiNPCManager.Instance.StopRaycast = false;
         }
 
         private bool IsTargetValid(GameObject target)
@@ -858,7 +860,7 @@ namespace Convai.Scripts.Runtime.Features
 
                 if (npcGroup != null)
                 {
-                    npcGroup.topic = _convaiManager.UserText;
+                    npcGroup.topic = _convaiManager.NPCConversationTopic;
                     _npcConversationManager.gameObject.SetActive(true);
                     _npcConversationManager.enabled = true;
                 }

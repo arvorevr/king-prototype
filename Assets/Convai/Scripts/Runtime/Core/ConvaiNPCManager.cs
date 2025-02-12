@@ -35,6 +35,7 @@ namespace Convai.Scripts.Runtime.Core
 
         // Singleton instance of the NPC manager.
         public static ConvaiNPCManager Instance { get; private set; }
+        public bool StopRaycast { get; set; }
 
         private void Awake()
         {
@@ -49,6 +50,12 @@ namespace Convai.Scripts.Runtime.Core
 
         private void LateUpdate()
         {
+            if (StopRaycast)
+            {
+                UpdateActiveNPC(null);
+                return;
+            }
+            
             Ray ray = new(_mainCamera.transform.position, _mainCamera.transform.forward);
             bool foundConvaiNPC = false;
 
