@@ -586,7 +586,7 @@ namespace Convai.Scripts.Runtime.Features
         {
             if (!IsTargetValid(target)) yield break;
             
-            ConvaiNPCManager.Instance.StopRaycast = true;
+            // ConvaiNPCManager.Instance.StopRaycast = true;
             ConvaiLogger.DebugLog($"Moving to Target: {target.name}", ConvaiLogger.LogCategory.Actions);
             ActionStarted?.Invoke("MoveTo", target);
 
@@ -602,7 +602,7 @@ namespace Convai.Scripts.Runtime.Features
             yield return MoveTowardsTarget(target, navMeshAgent);
 
             FinishMovement(animator, target);
-            ConvaiNPCManager.Instance.StopRaycast = false;
+            // ConvaiNPCManager.Instance.StopRaycast = false;
         }
 
         private bool IsTargetValid(GameObject target)
@@ -827,6 +827,11 @@ namespace Convai.Scripts.Runtime.Features
                 yield break;
             }
 
+            if (target.TryGetComponent<XRGrabInteractableNotifier>(out var interactable))
+            {
+                interactable.IsGrabbedByNpc = true;
+            }
+
             target.transform.SetParent(grabAttachPoint);
             target.transform.localPosition = Vector3.zero;
             target.transform.localRotation = Quaternion.identity;
@@ -894,7 +899,7 @@ namespace Convai.Scripts.Runtime.Features
         {
             ActionStarted?.Invoke("Jump", _currentNPC.gameObject);
 
-            float jumpForce = 5f;
+            float jumpForce = 50f;
             GetComponent<Rigidbody>().AddForce(new Vector3(0f, jumpForce, 0f), ForceMode.Impulse);
             _currentNPC.GetComponent<Animator>().CrossFade(Animator.StringToHash("Dance"), 1);
 

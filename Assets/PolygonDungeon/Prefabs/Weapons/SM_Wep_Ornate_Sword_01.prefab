@@ -261,13 +261,11 @@ MonoBehaviour:
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
   m_FarAttachMode: 0
-  convaiNPCManager: {fileID: 0}
+  objectName: Sword
   isWeapon: 1
-  grabText: The King grabbed the sword!
-  touchNPCText: The King poked you with the Sword.
-  hitNPCText: The King poked you with the Sword.
-  throwNPCText: The King threw the Sword on you.
-  hitSpeedThreshold: 1
+  hitSpeedThreshold: 5
+  throwSpeedThreshold: 3
+  speedUpdateInterval: 0.1
 --- !u!1 &3242752889425758076
 GameObject:
   m_ObjectHideFlags: 0

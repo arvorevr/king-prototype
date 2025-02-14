@@ -260,10 +260,8 @@ MonoBehaviour:
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
   m_FarAttachMode: 0
-  convaiNPCManager: {fileID: 0}
+  objectName: Meat
   isWeapon: 0
-  grabText: The king has taken the meat!
-  touchNPCText: The king touched you with the meat.
-  hitNPCText: The king hit you with the meat.
-  throwNPCText: The king throw the meat at you.
-  hitSpeedThreshold: 1
+  hitSpeedThreshold: 8
+  throwSpeedThreshold: 3
+  speedUpdateInterval: 0.1

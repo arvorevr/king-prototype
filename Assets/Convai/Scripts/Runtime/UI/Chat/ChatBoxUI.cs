@@ -181,6 +181,7 @@ namespace Convai.Scripts.Runtime.UI
         /// <param name="text">Text which needs to append to the existing message.</param>
         private void AppendToExistingMessage(string text)
         {
+            if (text.Contains("[Player Action]")) return;
             if (_messageList.Count > 0)
             {
                 Message lastMessage = _messageList[^1];
@@ -237,6 +238,7 @@ namespace Convai.Scripts.Runtime.UI
         /// <param name="isSpeakerPlayer"> Flag to check if the speaker is a player.</param>
         private void CreateNewMessage(string text, string speakerName, Color speakerColor, bool isSpeakerPlayer)
         {
+            if (isSpeakerPlayer && text.StartsWith("[Player Action]")) return;
             _isNewMessage = true;
 
             GameObject messageInstance = isSpeakerPlayer ? Instantiate(_playerMessageObject, _chatPanel.transform) : Instantiate(_characterMessageObject, _chatPanel.transform);

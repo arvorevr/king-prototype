@@ -261,13 +261,11 @@ MonoBehaviour:
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
   m_FarAttachMode: 0
-  convaiNPCManager: {fileID: 0}
+  objectName: Axe
   isWeapon: 1
-  grabText: The King has grabbed the Axe!
-  touchNPCText: The King poked you with the Axe.
-  hitNPCText: The King hit you with the Axe! You Are now dead.
-  throwNPCText: The King threw the Axe on you.
-  hitSpeedThreshold: 1
+  hitSpeedThreshold: 5
+  throwSpeedThreshold: 3
+  speedUpdateInterval: 0.1
 --- !u!1 &2620361099242381578
 GameObject:
   m_ObjectHideFlags: 0
