@@ -12,9 +12,8 @@ GameObject:
   - component: {fileID: 3366204}
   - component: {fileID: 2315668}
   - component: {fileID: 64342791793108732}
-  - component: {fileID: 4231390162157875634}
-  - component: {fileID: 4882027654272362783}
-  - component: {fileID: 7609912338523809619}
+  - component: {fileID: 7902909944213875833}
+  - component: {fileID: 7149506996965786656}
   m_Layer: 0
   m_Name: SM_Wep_Ornate_Sword_01
   m_TagString: Untagged
@@ -113,7 +112,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43647641934342548, guid: 6dfdb203528207642a9a93cda851ea15, type: 2}
---- !u!54 &4231390162157875634
+--- !u!54 &7902909944213875833
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -140,7 +139,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &4882027654272362783
+--- !u!114 &7149506996965786656
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -149,7 +148,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 119060}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
+  m_Script: {fileID: 11500000, guid: 79f9ca1c014211d44ab5eeb5a586168c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
@@ -187,19 +186,7 @@ MonoBehaviour:
       m_Calls: []
   m_SelectEntered:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7609912338523809619}
-        m_TargetAssemblyTypeName: GrabNotifier, Assembly-CSharp
-        m_MethodName: OnGrab
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_SelectExited:
     m_PersistentCalls:
       m_Calls: []
@@ -274,20 +261,13 @@ MonoBehaviour:
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
   m_FarAttachMode: 0
---- !u!114 &7609912338523809619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 119060}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c20e112785d8634a8838843ce52b02d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   convaiNPCManager: {fileID: 0}
+  isWeapon: 1
   grabText: The King grabbed the sword!
+  touchNPCText: The King poked you with the Sword.
+  hitNPCText: The King poked you with the Sword.
+  throwNPCText: The King threw the Sword on you.
+  hitSpeedThreshold: 1
 --- !u!1 &3242752889425758076
 GameObject:
   m_ObjectHideFlags: 0

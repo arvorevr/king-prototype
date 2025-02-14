@@ -13,8 +13,7 @@ GameObject:
   - component: {fileID: 2365474}
   - component: {fileID: 64556955706186764}
   - component: {fileID: 3398342273452398489}
-  - component: {fileID: 5835469562388746239}
-  - component: {fileID: 6825088457974316954}
+  - component: {fileID: 7320531523723480975}
   m_Layer: 0
   m_Name: SM_Wep_Axe_01
   m_TagString: Untagged
@@ -140,7 +139,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &5835469562388746239
+--- !u!114 &7320531523723480975
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -149,7 +148,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 144458}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
+  m_Script: {fileID: 11500000, guid: 79f9ca1c014211d44ab5eeb5a586168c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
@@ -187,19 +186,7 @@ MonoBehaviour:
       m_Calls: []
   m_SelectEntered:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6825088457974316954}
-        m_TargetAssemblyTypeName: GrabNotifier, Assembly-CSharp
-        m_MethodName: OnGrab
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_SelectExited:
     m_PersistentCalls:
       m_Calls: []
@@ -274,20 +261,13 @@ MonoBehaviour:
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
   m_FarAttachMode: 0
---- !u!114 &6825088457974316954
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 144458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c20e112785d8634a8838843ce52b02d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   convaiNPCManager: {fileID: 0}
-  grabText: The king has grabbed the Axe!
+  isWeapon: 1
+  grabText: The King has grabbed the Axe!
+  touchNPCText: The King poked you with the Axe.
+  hitNPCText: The King hit you with the Axe! You Are now dead.
+  throwNPCText: The King threw the Axe on you.
+  hitSpeedThreshold: 1
 --- !u!1 &2620361099242381578
 GameObject:
   m_ObjectHideFlags: 0

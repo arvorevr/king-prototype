@@ -662,7 +662,6 @@ namespace Convai.Scripts.Runtime.Core
             WavHeaderParser parser = new(wavBytes);
             
             NPCConversationTopic += result.AudioResponse.TextData + " ";
-            Debug.Log(NPCConversationTopic);
             
             if (!npc)
             {

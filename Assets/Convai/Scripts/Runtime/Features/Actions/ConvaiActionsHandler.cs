@@ -21,7 +21,8 @@ namespace Convai.Scripts.Runtime.Features
         PickUp,
         Drop,
         Grab,
-        TalkTo
+        TalkTo,
+        Die
     }
 
     /// <summary>
@@ -350,6 +351,10 @@ namespace Convai.Scripts.Runtime.Features
                 
                 case ActionChoice.TalkTo:
                     Talk(action.Target);
+                    break;
+                
+                case ActionChoice.Die:
+                    yield return Die();
                     break;
 
                 case ActionChoice.None:
@@ -894,6 +899,30 @@ namespace Convai.Scripts.Runtime.Features
             _currentNPC.GetComponent<Animator>().CrossFade(Animator.StringToHash("Dance"), 1);
 
             ActionEnded?.Invoke("Jump", _currentNPC.gameObject);
+        }
+        
+        private IEnumerator Die()
+        {
+            ActionStarted?.Invoke("Die", _currentNPC.gameObject);
+
+            ConvaiLogger.DebugLog("Dying!", ConvaiLogger.LogCategory.Actions);
+            _currentNPC.GetComponent<Animator>().CrossFade(Animator.StringToHash("Dying"), 0.1f);
+
+            if (TryGetComponent<Collider>(out var collider))
+            {
+                collider.enabled = false;
+            }
+
+            var npcManager = ConvaiNPCManager.Instance;
+            
+            if(npcManager.activeConvaiNPC == _currentNPC)
+            {
+                ConvaiNPCManager.Instance.StopRaycast = true;
+                yield return new WaitForSeconds(0.1f);
+                ConvaiNPCManager.Instance.StopRaycast = false;
+            }
+
+            ActionEnded?.Invoke("Die", _currentNPC.gameObject);
         }
 
         // STEP 3: Add the function for your action here.
