@@ -1,5 +1,6 @@
 using System.Collections;
 using Convai.Scripts.Runtime.Core;
+using Convai.Scripts.Runtime.Features;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -27,7 +28,7 @@ public class XRGrabInteractableNotifier : XRGrabInteractable
     private string _throwNpcText;
     private string _stealText;
     
-    public bool IsGrabbedByNpc { get; set; }
+    public GameObject NpcGrabbingObject { get; set; }
 
     private void Start()
     {
@@ -59,9 +60,13 @@ public class XRGrabInteractableNotifier : XRGrabInteractable
 
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
-        if (IsGrabbedByNpc)
+        if (NpcGrabbingObject)
         {
-            transform.parent = null;
+            if(NpcGrabbingObject.TryGetComponent(out ConvaiActionsHandler npcActions))
+            {
+                npcActions.Drop(gameObject);
+            }
+            
             if (_convaiNpcManager.activeConvaiNPC)
             {
                 _convaiInteraction = _convaiNpcManager.activeConvaiNPC.GetComponent<ConvaiPlayerInteractionManager>();
@@ -71,7 +76,7 @@ public class XRGrabInteractableNotifier : XRGrabInteractable
 
         base.OnSelectEntered(args);
 
-        IsGrabbedByNpc = false;
+        NpcGrabbingObject = null;
 
         if (_convaiInteraction || !_convaiNpcManager.activeConvaiNPC) return;
         StartCoroutine(SubmitSelectText());
@@ -94,7 +99,7 @@ public class XRGrabInteractableNotifier : XRGrabInteractable
     protected override void OnSelectExited(SelectExitEventArgs args)
     {
         base.OnSelectExited(args);
-        IsGrabbedByNpc = false;
+        NpcGrabbingObject = null;
         transform.parent = null;
         _rigidbody.isKinematic = false;
 
@@ -125,7 +130,6 @@ public class XRGrabInteractableNotifier : XRGrabInteractable
         }
         else
         {
-            Debug.Log(_rigidbody.linearVelocity.magnitude);
             if (!(_rigidbody.linearVelocity.magnitude >= throwSpeedThreshold)) return;
             if (!_convaiNpcManager.activeConvaiNPC) return;
             _convaiInteraction = _convaiNpcManager.activeConvaiNPC.GetComponent<ConvaiPlayerInteractionManager>();

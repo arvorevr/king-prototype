@@ -22,7 +22,8 @@ namespace Convai.Scripts.Runtime.Features
         Drop,
         Grab,
         TalkTo,
-        Die
+        PutOn,
+        Die,
     }
 
     /// <summary>
@@ -45,6 +46,7 @@ namespace Convai.Scripts.Runtime.Features
         [SerializeField] private NPC2NPCConversationManager _npcConversationManager;
         private bool _isMovingToDestination;
         private ConvaiGRPCAPI _convaiManager;
+        private GameObject _grabbedObject;
 
         // Awake is called when the script instance is being loaded
         private void Awake()
@@ -353,6 +355,10 @@ namespace Convai.Scripts.Runtime.Features
                     Talk(action.Target);
                     break;
                 
+                case ActionChoice.PutOn:
+                    PutOn(action.Target);
+                    break;
+                
                 case ActionChoice.Die:
                     yield return Die();
                     break;
@@ -585,8 +591,12 @@ namespace Convai.Scripts.Runtime.Features
         private IEnumerator MoveTo(GameObject target)
         {
             if (!IsTargetValid(target)) yield break;
+
+            if (_actionList.Any(action => action.Verb == ActionChoice.TalkTo))
+            {
+                ConvaiNPCManager.Instance.StopRaycast = true;
+            }
             
-            // ConvaiNPCManager.Instance.StopRaycast = true;
             ConvaiLogger.DebugLog($"Moving to Target: {target.name}", ConvaiLogger.LogCategory.Actions);
             ActionStarted?.Invoke("MoveTo", target);
 
@@ -602,7 +612,7 @@ namespace Convai.Scripts.Runtime.Features
             yield return MoveTowardsTarget(target, navMeshAgent);
 
             FinishMovement(animator, target);
-            // ConvaiNPCManager.Instance.StopRaycast = false;
+            ConvaiNPCManager.Instance.StopRaycast = false;
         }
 
         private bool IsTargetValid(GameObject target)
@@ -796,6 +806,11 @@ namespace Convai.Scripts.Runtime.Features
                 yield break;
             }
 
+            if (_grabbedObject != null)
+            {
+                Drop(_grabbedObject);
+            }
+
             Vector3 direction = (target.transform.position - transform.position).normalized;
             direction.y = 0;
             Quaternion targetRotation = Quaternion.LookRotation(direction);
@@ -829,9 +844,10 @@ namespace Convai.Scripts.Runtime.Features
 
             if (target.TryGetComponent<XRGrabInteractableNotifier>(out var interactable))
             {
-                interactable.IsGrabbedByNpc = true;
+                interactable.NpcGrabbingObject = gameObject;
             }
 
+            _grabbedObject = target;
             target.transform.SetParent(grabAttachPoint);
             target.transform.localPosition = Vector3.zero;
             target.transform.localRotation = Quaternion.identity;
@@ -876,20 +892,60 @@ namespace Convai.Scripts.Runtime.Features
                 }
             }
         }
+        
+        private void PutOn(GameObject target)
+        {
+            if (target == null)
+            {
+                ConvaiLogger.DebugLog("Target is null! Exiting PutOn coroutine.", ConvaiLogger.LogCategory.Actions);
+                return;
+            }
+            
+            if(_grabbedObject == null)
+            {
+                ConvaiLogger.DebugLog("No grabbed object to put on!", ConvaiLogger.LogCategory.Actions);
+                return;
+            }
 
-        private void Drop(GameObject target)
+            ConvaiLogger.DebugLog($"Putting {_grabbedObject.name} on Target: {target.name}", ConvaiLogger.LogCategory.Actions);
+
+            if (_grabbedObject.TryGetComponent<XRGrabInteractableNotifier>(out var interactable))
+            {
+                interactable.NpcGrabbingObject = null;
+            }
+
+            if (target.TryGetComponent<Placeholder>(out var placeholder))
+            {
+                placeholder.PlaceOnRandom(_grabbedObject);
+            }
+            else
+            {
+                _grabbedObject.transform.position = target.transform.position;
+                _grabbedObject.transform.rotation = target.transform.rotation;
+            }
+            
+            Drop(_grabbedObject);
+        }
+
+        public void Drop(GameObject target)
         {
             ActionStarted?.Invoke("Drop", target);
 
             if (target == null) return;
 
             ConvaiLogger.DebugLog($"Dropping Target: {target.name}", ConvaiLogger.LogCategory.Actions);
+            _grabbedObject = null;
             target.transform.parent = null;
             target.SetActive(true);
             
             if (target.TryGetComponent<Rigidbody>(out var rb))
             {
                 rb.isKinematic = false;
+            }
+            
+            if(target.TryGetComponent<XRGrabInteractableNotifier>(out var interactable))
+            {
+                interactable.NpcGrabbingObject = null;
             }
 
             ActionEnded?.Invoke("Drop", target);
