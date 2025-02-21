@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace Convai.Scripts.Runtime.Features
         private string _apiKey;
         private ConvaiService.ConvaiServiceClient _client;
         private NPCGroup _npcGroup;
+        private int _responseCount;
 
         public event Action<string, ConvaiGroupNPCController> OnTranscriptAvailable;
 
@@ -66,9 +68,22 @@ namespace Convai.Scripts.Runtime.Features
         /// <param name="isLipSyncActive">Whether lip sync is active for the request.</param>
         /// <param name="faceModel">The face model to use for the request.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task SendTextData(string userText, string characterID, string sessionID, bool isLipSyncActive, FaceModel faceModel, ConvaiGroupNPCController npcController)
+        public async Task SendTextData(string userText, string characterID, string sessionID, bool isLipSyncActive,
+            FaceModel faceModel, ConvaiGroupNPCController npcController)
         {
-            AsyncDuplexStreamingCall<GetResponseRequest, GetResponseResponse> call = GetAsyncDuplexStreamingCallOptions();
+            if (_responseCount == _npcGroup.MaxMessageCount-1)
+            {
+                userText = "[End the Conversation] " + userText;
+            }
+            
+            if (_responseCount > _npcGroup.MaxMessageCount)
+            {
+                StartCoroutine(EndConversation());
+                return;
+            }
+            
+            AsyncDuplexStreamingCall<GetResponseRequest, GetResponseResponse> call =
+                GetAsyncDuplexStreamingCallOptions();
 
             GetResponseRequest getResponseConfigRequest = CreateGetResponseRequest(characterID, sessionID, isLipSyncActive, faceModel, false, null);
 
@@ -83,6 +98,7 @@ namespace Convai.Scripts.Runtime.Features
                     }
                 });
                 await call.RequestStream.CompleteAsync();
+                _responseCount++;
 
                 Task receiveResultsTask = Task.Run(
                     async () => { await ReceiveResultFromServer(call, _cancellationTokenSource.Token, npcController); },
@@ -95,6 +111,15 @@ namespace Convai.Scripts.Runtime.Features
             }
         }
 
+        private IEnumerator EndConversation()
+        {
+            // _npcGroup.GroupNPC1.enabled = false;
+            // _npcGroup.GroupNPC2.enabled = false;
+            yield return new WaitForSeconds(15);
+            NPC2NPCConversationManager.Instance.EndConversation(_npcGroup.GroupNPC1);
+            // Destroy(gameObject);
+        }
+
         /// <summary>
         ///     Creates a GetResponseRequest with the specified parameters.
         /// </summary>
@@ -105,7 +130,8 @@ namespace Convai.Scripts.Runtime.Features
         /// <param name="isActionActive">Whether action is active for the request.</param>
         /// <param name="actionConfig">The action configuration to use for the request.</param>
         /// <returns>A GetResponseRequest with the specified parameters.</returns>
-        private GetResponseRequest CreateGetResponseRequest(string characterID, string sessionID, bool isLipSyncActive, FaceModel faceModel, bool isActionActive,
+        private GetResponseRequest CreateGetResponseRequest(string characterID, string sessionID, bool isLipSyncActive,
+            FaceModel faceModel, bool isActionActive,
             ActionConfig actionConfig)
         {
             GetResponseRequest getResponseConfigRequest = new()
@@ -135,13 +161,16 @@ namespace Convai.Scripts.Runtime.Features
         /// <param name="call">The AsyncDuplexStreamingCall to use for receiving the response.</param>
         /// <param name="cancellationToken">The cancellation token to use for cancelling the operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        private async Task ReceiveResultFromServer(AsyncDuplexStreamingCall<GetResponseRequest, GetResponseResponse> call, CancellationToken cancellationToken, ConvaiGroupNPCController npcController)
+        private async Task ReceiveResultFromServer(
+            AsyncDuplexStreamingCall<GetResponseRequest, GetResponseResponse> call, CancellationToken cancellationToken,
+            ConvaiGroupNPCController npcController)
         {
             ConvaiLogger.Info("Receiving response from server", ConvaiLogger.LogCategory.Character);
             Queue<LipSyncBlendFrameData> lipSyncBlendFrameQueue = new();
             ConvaiNPC convaiNPC = npcController.ConvaiNPC;
             bool firstSilFound = false;
-            while (!cancellationToken.IsCancellationRequested && await call.ResponseStream.MoveNext(cancellationToken).ConfigureAwait(false))
+            while (!cancellationToken.IsCancellationRequested &&
+                   await call.ResponseStream.MoveNext(cancellationToken).ConfigureAwait(false))
                 try
                 {
                     GetResponseResponse result = call.ResponseStream.Current;
@@ -149,7 +178,8 @@ namespace Convai.Scripts.Runtime.Features
                     if (result.AudioResponse != null)
                         if (result.AudioResponse.AudioData != null)
                         {
-                            MainThreadDispatcher.Instance.RunOnMainThread(() => OnTranscriptAvailable?.Invoke(result.AudioResponse.TextData, npcController));
+                            MainThreadDispatcher.Instance.RunOnMainThread(() =>
+                                OnTranscriptAvailable?.Invoke(result.AudioResponse.TextData, npcController));
                             if (result.AudioResponse.AudioData.ToByteArray().Length > 46)
                             {
                                 byte[] wavBytes = result.AudioResponse.AudioData.ToByteArray();
@@ -158,7 +188,8 @@ namespace Convai.Scripts.Runtime.Features
                                 WavHeaderParser parser = new(wavBytes);
                                 if (convaiNPC.convaiLipSync == null)
                                 {
-                                    ConvaiLogger.DebugLog($"Enqueuing responses: {result.AudioResponse.TextData}", ConvaiLogger.LogCategory.LipSync);
+                                    ConvaiLogger.DebugLog($"Enqueuing responses: {result.AudioResponse.TextData}",
+                                        ConvaiLogger.LogCategory.LipSync);
                                     convaiNPC.EnqueueResponse(result);
                                 }
                                 else
@@ -181,7 +212,8 @@ namespace Convai.Scripts.Runtime.Features
                                 if (convaiNPC.convaiLipSync != null)
                                 {
                                     //ConvaiLogger.Info(result.AudioResponse.VisemesData, ConvaiLogger.LogCategory.LipSync);
-                                    if (result.AudioResponse.VisemesData.Visemes.Sil == -2 || result.AudioResponse.EndOfResponse)
+                                    if (result.AudioResponse.VisemesData.Visemes.Sil == -2 ||
+                                        result.AudioResponse.EndOfResponse)
                                     {
                                         if (firstSilFound) lipSyncBlendFrameQueue.Dequeue().Process(convaiNPC);
                                         firstSilFound = true;
@@ -195,15 +227,18 @@ namespace Convai.Scripts.Runtime.Features
                             if (result.AudioResponse.BlendshapesData != null)
                                 if (convaiNPC.convaiLipSync != null)
                                 {
-                                    if (lipSyncBlendFrameQueue.Peek().CanProcess() || result.AudioResponse.EndOfResponse)
+                                    if (lipSyncBlendFrameQueue.Peek().CanProcess() ||
+                                        result.AudioResponse.EndOfResponse)
                                     {
                                         lipSyncBlendFrameQueue.Dequeue().Process(convaiNPC);
                                     }
                                     else
                                     {
-                                        lipSyncBlendFrameQueue.Peek().Enqueue(result.AudioResponse.FaceEmotion.ArKitBlendShapes);
+                                        lipSyncBlendFrameQueue.Peek()
+                                            .Enqueue(result.AudioResponse.FaceEmotion.ArKitBlendShapes);
 
-                                        if (lipSyncBlendFrameQueue.Peek().CanPartiallyProcess()) lipSyncBlendFrameQueue.Peek().ProcessPartially(convaiNPC);
+                                        if (lipSyncBlendFrameQueue.Peek().CanPartiallyProcess())
+                                            lipSyncBlendFrameQueue.Peek().ProcessPartially(convaiNPC);
                                     }
                                 }
 

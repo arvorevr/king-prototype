@@ -811,20 +811,7 @@ namespace Convai.Scripts.Runtime.Features
                 Drop(_grabbedObject);
             }
 
-            Vector3 direction = (target.transform.position - transform.position).normalized;
-            direction.y = 0;
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            float elapsedTime = 0f;
-            float rotationTime = 0.5f;
-
-            while (elapsedTime < rotationTime)
-            {
-                targetRotation.x = 0;
-                targetRotation.z = 0;
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, elapsedTime / rotationTime);
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
+            LookAtTarget(target);
 
             ConvaiLogger.DebugLog($"Grabbing Target: {target.name}", ConvaiLogger.LogCategory.Actions);
 
@@ -874,15 +861,12 @@ namespace Convai.Scripts.Runtime.Features
 
             if (_npcConversationManager != null)
             {
-                var npcGroupController1 = GetComponent<ConvaiGroupNPCController>();
-                var npcGroupController2 = target.GetComponent<ConvaiGroupNPCController>();
+                var npcGroupController1 = target.GetComponent<ConvaiGroupNPCController>();
+                var npcGroupController2 = GetComponent<ConvaiGroupNPCController>();
                 var npcGroup = new NPCGroup(npcGroupController1, npcGroupController2);
                 _npcConversationManager.npcGroups.Add(npcGroup);
                 npcGroupController1.enabled = true;
                 npcGroupController2.enabled = true;
-                // var npcGroup = _npcConversationManager
-                //     .npcGroups
-                //     .FirstOrDefault(x => x.GroupNPC1.gameObject.GetInstanceID() == target.GetInstanceID() || x.GroupNPC2.gameObject.GetInstanceID() == target.GetInstanceID());
 
                 if (npcGroup != null)
                 {
@@ -890,9 +874,20 @@ namespace Convai.Scripts.Runtime.Features
                     _npcConversationManager.gameObject.SetActive(true);
                     _npcConversationManager.enabled = true;
                 }
+                
+                // Look At Target
+                LookAtTarget(target);
             }
         }
-        
+
+        private void LookAtTarget(GameObject target)
+        {
+            Vector3 direction = (target.transform.position - transform.position).normalized;
+            direction.y = 0;
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = targetRotation;
+        }
+
         private void PutOn(GameObject target)
         {
             if (target == null)
@@ -909,6 +904,8 @@ namespace Convai.Scripts.Runtime.Features
 
             ConvaiLogger.DebugLog($"Putting {_grabbedObject.name} on Target: {target.name}", ConvaiLogger.LogCategory.Actions);
 
+            LookAtTarget(target);
+            
             if (_grabbedObject.TryGetComponent<XRGrabInteractableNotifier>(out var interactable))
             {
                 interactable.NpcGrabbingObject = null;

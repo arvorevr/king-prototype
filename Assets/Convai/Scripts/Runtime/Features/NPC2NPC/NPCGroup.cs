@@ -13,6 +13,7 @@ namespace Convai.Scripts.Runtime.Features
     {
         [field: SerializeField] public ConvaiGroupNPCController GroupNPC1 { get; private set; }
         [field: SerializeField] public ConvaiGroupNPCController GroupNPC2 { get; private set; }
+        [field: SerializeField] public int MaxMessageCount { get; private set; }
         public string topic;
         [ReadOnly] public string messageToRelay;
 
@@ -22,10 +23,11 @@ namespace Convai.Scripts.Runtime.Features
         public ConvaiGroupNPCController CurrentSpeaker { get; set; }
         public ConvaiGroupNPCController CurrentListener => CurrentSpeaker == GroupNPC1 ? GroupNPC2 : GroupNPC1;
         
-        public NPCGroup(ConvaiGroupNPCController groupNPC1, ConvaiGroupNPCController groupNPC2)
+        public NPCGroup(ConvaiGroupNPCController groupNPC1, ConvaiGroupNPCController groupNPC2, int maxMessageCount = 6)
         {
             GroupNPC1 = groupNPC1;
             GroupNPC2 = groupNPC2;
+            MaxMessageCount = maxMessageCount;
         }
 
         public void Initialize(Action<bool, ConvaiGroupNPCController> vicinityChangedCallback)

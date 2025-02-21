@@ -502,13 +502,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 198752173227353153, guid: 26126a81b94901944a4b06b9c0777998, type: 3}
-      propertyPath: characterName
-      value: Mister Billy
-      objectReference: {fileID: 0}
     - target: {fileID: 603778653417262933, guid: 26126a81b94901944a4b06b9c0777998, type: 3}
       propertyPath: m_Name
       value: Mister Billy
+      objectReference: {fileID: 0}
+    - target: {fileID: 3056676090853615637, guid: 26126a81b94901944a4b06b9c0777998, type: 3}
+      propertyPath: m_StoppingDistance
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3309303933968811330, guid: 26126a81b94901944a4b06b9c0777998, type: 3}
       propertyPath: playerTransform
@@ -923,82 +923,6 @@ PrefabInstance:
       propertyPath: _npcConversationManager
       value: 
       objectReference: {fileID: 1303586609}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.size
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[1].action
-      value: Put It On
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[2].action
-      value: Dance
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[3].action
-      value: Drop
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[4].action
-      value: Jump
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[5].action
-      value: Grab
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[6].action
-      value: Collect
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[7].action
-      value: Talk To
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[1].actionChoice
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[2].actionChoice
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[3].actionChoice
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[4].actionChoice
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[5].actionChoice
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[6].actionChoice
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[7].actionChoice
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[1].animationName
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[2].animationName
-      value: Dance
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[3].animationName
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
-      propertyPath: actionMethods.Array.data[4].animationName
-      value: Jumping
-      objectReference: {fileID: 0}
     - target: {fileID: 6880649847875947248, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1047,6 +971,10 @@ PrefabInstance:
       propertyPath: speechBubblePrefab
       value: 
       objectReference: {fileID: 1281558793}
+    - target: {fileID: 8684006987215985625, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
+      propertyPath: m_StoppingDistance
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

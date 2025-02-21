@@ -28,7 +28,7 @@ namespace Convai.Scripts.Runtime.Features
         /// <summary>
         ///     Starts coroutine for player vicinity check and subscribe to necessary events
         /// </summary>
-        private void Start()
+        private void OnEnable()
         {
             _npcGroup = NPC2NPCConversationManager.Instance.npcGroups.Find(c => c.BelongToGroup(this));
             otherNPC = _npcGroup.GroupNPC1 == this ? _npcGroup.GroupNPC2 : _npcGroup.GroupNPC1;
@@ -40,6 +40,13 @@ namespace Convai.Scripts.Runtime.Features
         ///     Unsubscribes to the events and stops the coroutine
         /// </summary>
         private void OnDestroy()
+        {
+            if (TryGetComponent(out ConvaiNPCAudioManager convaiNPCAudio)) convaiNPCAudio.OnAudioTranscriptAvailable -= HandleAudioTranscriptAvailable;
+            if(_npc2NPCGrpcClient!=null) _npc2NPCGrpcClient.OnTranscriptAvailable -= HandleTranscriptAvailable;
+            if (_checkPlayerVicinityCoroutine != null) StopCoroutine(_checkPlayerVicinityCoroutine);
+        }
+
+        private void OnDisable()
         {
             if (TryGetComponent(out ConvaiNPCAudioManager convaiNPCAudio)) convaiNPCAudio.OnAudioTranscriptAvailable -= HandleAudioTranscriptAvailable;
             if(_npc2NPCGrpcClient!=null) _npc2NPCGrpcClient.OnTranscriptAvailable -= HandleTranscriptAvailable;

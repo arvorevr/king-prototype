@@ -876,6 +876,9 @@ MonoBehaviour:
   - action: Move To
     animationName: 
     actionChoice: 3
+  - action: Put It On
+    animationName: 
+    actionChoice: 8
   - action: Dance
     animationName: Dance
     actionChoice: 0
