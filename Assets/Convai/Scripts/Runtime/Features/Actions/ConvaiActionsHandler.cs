@@ -42,6 +42,7 @@ namespace Convai.Scripts.Runtime.Features
         private List<string> _actions = new();
         private ConvaiNPC _currentNPC;
         private ConvaiInteractablesData _interactablesData;
+        [SerializeField] private string[] excludedInteractables;
         private Coroutine _playActionListCoroutine;
         [SerializeField] private NPC2NPCConversationManager _npcConversationManager;
         private bool _isMovingToDestination;
@@ -75,6 +76,7 @@ namespace Convai.Scripts.Runtime.Features
                 // Iterate through each character in global action settings and add them to the action configuration
                 foreach (ConvaiInteractablesData.Character character in _interactablesData.Characters)
                 {
+                    if(excludedInteractables.Contains(character.Name)) continue;
                     ActionConfig.Types.Character rpcCharacter = new()
                     {
                         Name = character.Name,
@@ -87,6 +89,7 @@ namespace Convai.Scripts.Runtime.Features
                 // Iterate through each object in global action settings and add them to the action configuration
                 foreach (ConvaiInteractablesData.Object eachObject in _interactablesData.Objects)
                 {
+                    if(excludedInteractables.Contains(eachObject.Name)) continue;
                     ActionConfig.Types.Object rpcObject = new()
                     {
                         Name = eachObject.Name,
@@ -783,6 +786,11 @@ namespace Convai.Scripts.Runtime.Features
             target.transform.parent = gameObject.transform;
             target.SetActive(false);
 
+            if (TryGetComponent<Inventory>(out var inventory))
+            {
+                inventory.Items.Add(target);
+            }
+
             // Transition back to the "Idle" animation.
             animator.CrossFade(Animator.StringToHash("Idle"), 0.4f);
 
@@ -842,6 +850,11 @@ namespace Convai.Scripts.Runtime.Features
             if (target.TryGetComponent<Rigidbody>(out var rb))
             {
                 rb.isKinematic = true;
+            }
+            
+            if (TryGetComponent<Inventory>(out var inventory))
+            {
+                inventory.Items.Add(target);
             }
 
             animator.CrossFade(Animator.StringToHash("Idle"), 0.4f);
@@ -943,6 +956,11 @@ namespace Convai.Scripts.Runtime.Features
             if(target.TryGetComponent<XRGrabInteractableNotifier>(out var interactable))
             {
                 interactable.NpcGrabbingObject = null;
+            }
+            
+            if (TryGetComponent<Inventory>(out var inventory))
+            {
+                inventory.Items.Remove(target);
             }
 
             ActionEnded?.Invoke("Drop", target);

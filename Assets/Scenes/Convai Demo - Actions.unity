@@ -522,6 +522,14 @@ PrefabInstance:
       propertyPath: _npcConversationManager
       value: 
       objectReference: {fileID: 1303586609}
+    - target: {fileID: 3640427253983819726, guid: 26126a81b94901944a4b06b9c0777998, type: 3}
+      propertyPath: excludedInteractables.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3640427253983819726, guid: 26126a81b94901944a4b06b9c0777998, type: 3}
+      propertyPath: 'excludedInteractables.Array.data[0]'
+      value: Sword
+      objectReference: {fileID: 0}
     - target: {fileID: 4094815837967537027, guid: 26126a81b94901944a4b06b9c0777998, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.38
@@ -565,13 +573,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 603778653417262933, guid: 26126a81b94901944a4b06b9c0777998, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 223216699}
   m_SourcePrefab: {fileID: 100100000, guid: 26126a81b94901944a4b06b9c0777998, type: 3}
 --- !u!1 &223216688 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 603778653417262933, guid: 26126a81b94901944a4b06b9c0777998, type: 3}
   m_PrefabInstance: {fileID: 223216687}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &223216699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223216688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 822ac2960ca601c4594ae2e3f05bc59d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &247704693
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,6 +946,14 @@ PrefabInstance:
       propertyPath: _npcConversationManager
       value: 
       objectReference: {fileID: 1303586609}
+    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
+      propertyPath: excludedInteractables.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4302685815782910874, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
+      propertyPath: 'excludedInteractables.Array.data[0]'
+      value: Axe
+      objectReference: {fileID: 0}
     - target: {fileID: 6880649847875947248, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -978,13 +1009,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919893227056120847, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 370665295}
   m_SourcePrefab: {fileID: 100100000, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
 --- !u!1 &370665284 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919893227056120847, guid: 484e204ec4c188c44b04ba34aac93dbd, type: 3}
   m_PrefabInstance: {fileID: 370665283}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &370665295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370665284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 822ac2960ca601c4594ae2e3f05bc59d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &372895475
 GameObject:
   m_ObjectHideFlags: 0
