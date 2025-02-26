@@ -14,9 +14,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/CastleScene.unity
     guid: c893cc543debfdc4dad6b529d1ab58f9
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/_CastleSceneMain.unity
     guid: 657897efa99e3ea478fa78d99e075e00
+  - enabled: 1
+    path: Assets/Scenes/Town.unity
+    guid: f6381e6978ed9d6418c128a412448577
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260, type: 2}
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: dc5a169419fa04987b057f65238cf3ba, type: 2}
