@@ -6,7 +6,7 @@ public class DoorBehavior : MonoBehaviour
     [SerializeField] private GameObject requiredItem;
     [SerializeField] private float openTime = 1.0f;
     [SerializeField] private float openRotation = 90.0f;
-    
+
     public bool IsOpen { get; private set; }
     private bool _isOpening;
     private bool _isClosing;
@@ -18,22 +18,26 @@ public class DoorBehavior : MonoBehaviour
     {
         _rotateTimer = 0;
         _isOpening = false;
+        _isClosing = false;
         _initialRotation = transform.rotation.eulerAngles.y;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (requiredItem && !(other.TryGetComponent<Inventory>(out var inventory) && inventory.Items.Contains(requiredItem)))
+        if (requiredItem && !(other.TryGetComponent<Inventory>(out var inventory) &&
+                              inventory.Items.Contains(requiredItem)))
         {
             return;
         }
-        
-        if(!IsOpen)
+
+        if (!IsOpen || _isClosing)
         {
             _isOpening = true;
         }
-        
-        _nearCharacterCount++;
+
+        // _rotateTimer = 0;
+        _isClosing = false;
+        _nearCharacterCount = _nearCharacterCount < 0 ? 1 : _nearCharacterCount + 1;
     }
 
     private void OnTriggerExit(Collider other)
@@ -42,12 +46,13 @@ public class DoorBehavior : MonoBehaviour
         {
             return;
         }
-        
+
         _nearCharacterCount--;
-        if (_nearCharacterCount == 0 && closeAfterExit)
+        if (_nearCharacterCount <= 0 && closeAfterExit)
         {
+            _isOpening = false;
             _isClosing = true;
-            _rotateTimer = 0;
+            // _rotateTimer = 0;
         }
     }
 
@@ -70,26 +75,27 @@ public class DoorBehavior : MonoBehaviour
             }
             else
             {
-                var rotation = Mathf.Lerp(_initialRotation, _initialRotation + openRotation, _rotateTimer / openTime);
+                var rotation = Mathf.Lerp(_initialRotation, openRotation, _rotateTimer / openTime);
                 transform.rotation = Quaternion.Euler(0, rotation, 0);
             }
         }
     }
-    
+
     private void HandleClosing()
     {
         if (_isClosing)
         {
-            _rotateTimer += Time.deltaTime;
-            if (_rotateTimer >= openTime)
+            _rotateTimer -= Time.deltaTime;
+            if (_rotateTimer <= 0)
             {
                 IsOpen = false;
                 _isClosing = false;
+                _rotateTimer = 0;
                 transform.rotation = Quaternion.Euler(0, _initialRotation, 0);
             }
             else
             {
-                var rotation = Mathf.Lerp(_initialRotation + openRotation, _initialRotation, _rotateTimer / openTime);
+                var rotation = Mathf.Lerp(_initialRotation, openRotation, _rotateTimer / openTime);
                 transform.rotation = Quaternion.Euler(0, rotation, 0);
             }
         }
