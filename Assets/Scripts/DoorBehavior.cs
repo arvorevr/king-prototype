@@ -5,13 +5,13 @@ public class DoorBehavior : MonoBehaviour
     [SerializeField] private bool closeAfterExit = true;
     [SerializeField] private GameObject requiredItem;
     [SerializeField] private float openTime = 1.0f;
-    [SerializeField] private float openRotation = 90.0f;
+    [SerializeField] private Vector3 openRotation = new Vector3(0, 90f, 0);
 
     public bool IsOpen { get; private set; }
     private bool _isOpening;
     private bool _isClosing;
     private float _rotateTimer;
-    private float _initialRotation;
+    private Vector3 _initialRotation;
     private int _nearCharacterCount;
 
     private void Start()
@@ -19,7 +19,7 @@ public class DoorBehavior : MonoBehaviour
         _rotateTimer = 0;
         _isOpening = false;
         _isClosing = false;
-        _initialRotation = transform.rotation.eulerAngles.y;
+        _initialRotation = transform.rotation.eulerAngles;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -71,12 +71,12 @@ public class DoorBehavior : MonoBehaviour
             {
                 IsOpen = true;
                 _isOpening = false;
-                transform.rotation = Quaternion.Euler(0, openRotation, 0);
+                transform.rotation = Quaternion.Euler(openRotation);
             }
             else
             {
-                var rotation = Mathf.Lerp(_initialRotation, openRotation, _rotateTimer / openTime);
-                transform.rotation = Quaternion.Euler(0, rotation, 0);
+                var rotation = Vector3.Lerp(_initialRotation, openRotation, _rotateTimer / openTime);
+                transform.rotation = Quaternion.Euler(rotation);
             }
         }
     }
@@ -91,12 +91,12 @@ public class DoorBehavior : MonoBehaviour
                 IsOpen = false;
                 _isClosing = false;
                 _rotateTimer = 0;
-                transform.rotation = Quaternion.Euler(0, _initialRotation, 0);
+                transform.rotation = Quaternion.Euler(_initialRotation);
             }
             else
             {
-                var rotation = Mathf.Lerp(_initialRotation, openRotation, _rotateTimer / openTime);
-                transform.rotation = Quaternion.Euler(0, rotation, 0);
+                var rotation = Vector3.Lerp(_initialRotation, openRotation, _rotateTimer / openTime);
+                transform.rotation = Quaternion.Euler(rotation);
             }
         }
     }

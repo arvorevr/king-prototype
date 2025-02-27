@@ -27,6 +27,8 @@ public class XRGrabInteractableNotifier : XRGrabInteractable
     private string _hitNpcText;
     private string _throwNpcText;
     private string _stealText;
+
+    private GameObject _playerReference;
     
     public GameObject NpcGrabbingObject { get; set; }
 
@@ -77,6 +79,16 @@ public class XRGrabInteractableNotifier : XRGrabInteractable
         base.OnSelectEntered(args);
 
         NpcGrabbingObject = null;
+        
+        if(_playerReference == null)
+        {
+            _playerReference = GameObject.FindGameObjectWithTag("Player");
+        }
+
+        if (_playerReference.TryGetComponent<Inventory>(out var inventory))
+        {
+            inventory.Items.Add(gameObject);
+        }
 
         if (_convaiInteraction || !_convaiNpcManager.activeConvaiNPC) return;
         StartCoroutine(SubmitSelectText());
@@ -102,6 +114,16 @@ public class XRGrabInteractableNotifier : XRGrabInteractable
         NpcGrabbingObject = null;
         transform.parent = null;
         _rigidbody.isKinematic = false;
+        
+        if(_playerReference == null)
+        {
+            _playerReference = GameObject.FindGameObjectWithTag("Player");
+        }
+        
+        if (_playerReference.TryGetComponent<Inventory>(out var inventory))
+        {
+            inventory.Items.Remove(gameObject);
+        }
 
         if (_convaiNpcManager.activeConvaiNPC && _selectTextSubmitted)
         {
