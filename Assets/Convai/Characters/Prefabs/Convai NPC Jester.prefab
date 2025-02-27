@@ -1552,6 +1552,7 @@ GameObject:
   - component: {fileID: 2293079131789347660}
   - component: {fileID: 8391425184236966172}
   - component: {fileID: 6581118394437899330}
+  - component: {fileID: 1724382911699257722}
   m_Layer: 0
   m_Name: Convai NPC Jester
   m_TagString: Untagged
@@ -1777,7 +1778,7 @@ MonoBehaviour:
   - action: Talk To
     animationName: 
     actionChoice: 7
-  - action: Put On
+  - action: Put It On
     animationName: 
     actionChoice: 8
   actionResponseList: []
@@ -1848,6 +1849,18 @@ MonoBehaviour:
   speechBubblePrefab: {fileID: 0}
   playerTransform: {fileID: 0}
   conversationDistanceThreshold: 5
+--- !u!114 &1724382911699257722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7785774666957766550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 822ac2960ca601c4594ae2e3f05bc59d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7884370931654435770
 GameObject:
   m_ObjectHideFlags: 0

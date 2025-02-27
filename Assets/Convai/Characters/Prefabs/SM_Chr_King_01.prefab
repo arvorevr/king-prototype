@@ -624,6 +624,7 @@ GameObject:
   - component: {fileID: 8131100604719397695}
   - component: {fileID: 5132443781176219507}
   - component: {fileID: 6769162497042216815}
+  - component: {fileID: 2857660831253449299}
   m_Layer: 0
   m_Name: SM_Chr_King_01
   m_TagString: Untagged
@@ -849,6 +850,9 @@ MonoBehaviour:
   - action: Talk To
     animationName: 
     actionChoice: 7
+  - action: Put It On
+    animationName: 
+    actionChoice: 8
   actionResponseList: []
   grabAttachPoint: {fileID: 2259067314499932164}
   excludedInteractables: []
@@ -917,6 +921,18 @@ MonoBehaviour:
   speechBubblePrefab: {fileID: 0}
   playerTransform: {fileID: 0}
   conversationDistanceThreshold: 5
+--- !u!114 &2857660831253449299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2726222144223243448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 822ac2960ca601c4594ae2e3f05bc59d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2887902943583443718
 GameObject:
   m_ObjectHideFlags: 0
