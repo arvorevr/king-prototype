@@ -21,7 +21,8 @@ namespace Convai.Scripts.Runtime.Features
         {
             if (playerTransform == null) playerTransform = Camera.main.transform;
             ConvaiNPC = GetComponent<ConvaiNPC>();
-            CONVERSATION_DISTANCE_THRESHOLD = conversationDistanceThreshold == 0 ? Mathf.Infinity : conversationDistanceThreshold;
+            CONVERSATION_DISTANCE_THRESHOLD =
+                conversationDistanceThreshold == 0 ? Mathf.Infinity : conversationDistanceThreshold;
             TryGetComponent(out _lipSync);
         }
 
@@ -33,7 +34,8 @@ namespace Convai.Scripts.Runtime.Features
             _npcGroup = NPC2NPCConversationManager.Instance.npcGroups.Find(c => c.BelongToGroup(this));
             otherNPC = _npcGroup.GroupNPC1 == this ? _npcGroup.GroupNPC2 : _npcGroup.GroupNPC1;
             _checkPlayerVicinityCoroutine = StartCoroutine(CheckPlayerVicinity());
-            if (TryGetComponent(out ConvaiNPCAudioManager convaiNPCAudio)) convaiNPCAudio.OnAudioTranscriptAvailable += HandleAudioTranscriptAvailable;
+            if (TryGetComponent(out ConvaiNPCAudioManager convaiNPCAudio))
+                convaiNPCAudio.OnAudioTranscriptAvailable += HandleAudioTranscriptAvailable;
         }
 
         /// <summary>
@@ -41,15 +43,17 @@ namespace Convai.Scripts.Runtime.Features
         /// </summary>
         private void OnDestroy()
         {
-            if (TryGetComponent(out ConvaiNPCAudioManager convaiNPCAudio)) convaiNPCAudio.OnAudioTranscriptAvailable -= HandleAudioTranscriptAvailable;
-            if(_npc2NPCGrpcClient!=null) _npc2NPCGrpcClient.OnTranscriptAvailable -= HandleTranscriptAvailable;
+            if (TryGetComponent(out ConvaiNPCAudioManager convaiNPCAudio))
+                convaiNPCAudio.OnAudioTranscriptAvailable -= HandleAudioTranscriptAvailable;
+            if (_npc2NPCGrpcClient != null) _npc2NPCGrpcClient.OnTranscriptAvailable -= HandleTranscriptAvailable;
             if (_checkPlayerVicinityCoroutine != null) StopCoroutine(_checkPlayerVicinityCoroutine);
         }
 
         private void OnDisable()
         {
-            if (TryGetComponent(out ConvaiNPCAudioManager convaiNPCAudio)) convaiNPCAudio.OnAudioTranscriptAvailable -= HandleAudioTranscriptAvailable;
-            if(_npc2NPCGrpcClient!=null) _npc2NPCGrpcClient.OnTranscriptAvailable -= HandleTranscriptAvailable;
+            if (TryGetComponent(out ConvaiNPCAudioManager convaiNPCAudio))
+                convaiNPCAudio.OnAudioTranscriptAvailable -= HandleAudioTranscriptAvailable;
+            if (_npc2NPCGrpcClient != null) _npc2NPCGrpcClient.OnTranscriptAvailable -= HandleTranscriptAvailable;
             if (_checkPlayerVicinityCoroutine != null) StopCoroutine(_checkPlayerVicinityCoroutine);
         }
 
@@ -103,32 +107,23 @@ namespace Convai.Scripts.Runtime.Features
         private IEnumerator CheckPlayerVicinity()
         {
             bool previousState = false;
-            Vector3 previousPlayerPosition = Vector3.zero;
             yield return new WaitForSeconds(0.1f);
             while (true)
             {
                 Vector3 currentPlayerPosition = playerTransform.transform.position;
+                float distanceToPlayer = Vector3.Distance(transform.position, currentPlayerPosition);
+                bool isPlayerCurrentlyNear = distanceToPlayer <= CONVERSATION_DISTANCE_THRESHOLD;
 
-                // Check if the player has moved more than a certain threshold distance
-                if (Vector3.Distance(previousPlayerPosition, currentPlayerPosition) > PLAYER_MOVE_THRESHOLD)
+                // If the player's current vicinity state is different from the previous state, raise the event
+                if (isPlayerCurrentlyNear != previousState && !ConvaiNPC.isCharacterActive)
                 {
-                    // Calculate the distance between the NPC and the player
-                    float distanceToPlayer = Vector3.Distance(transform.position, currentPlayerPosition);
-
-                    // Check if the player is within the threshold distance
-                    bool isPlayerCurrentlyNear = distanceToPlayer <= CONVERSATION_DISTANCE_THRESHOLD;
-
-                    // If the player's current vicinity state is different from the previous state, raise the event
-                    if (isPlayerCurrentlyNear != previousState && !ConvaiNPC.isCharacterActive)
-                    {
-                        OnPlayerVicinityChanged?.Invoke(isPlayerCurrentlyNear, this);
-                        previousState = isPlayerCurrentlyNear; // Update the previous state
-                        ConvaiLogger.Info($"Player is currently near {ConvaiNPC.characterName}: {isPlayerCurrentlyNear}", ConvaiLogger.LogCategory.Character);
-                    }
-
-                    previousPlayerPosition = currentPlayerPosition; // Update the player's previous position
-                    // Check every half second
+                    OnPlayerVicinityChanged?.Invoke(isPlayerCurrentlyNear, this);
+                    previousState = isPlayerCurrentlyNear; // Update the previous state
+                    ConvaiLogger.Info(
+                        $"Player is currently near {ConvaiNPC.characterName}: {isPlayerCurrentlyNear}",
+                        ConvaiLogger.LogCategory.Character);
                 }
+
 
                 yield return new WaitForSeconds(0.5f);
             }
@@ -160,13 +155,15 @@ namespace Convai.Scripts.Runtime.Features
             }
             catch (Exception ex)
             {
-                ConvaiLogger.Warn($"Error sending message data for NPC2NPC: {ex.Message}", ConvaiLogger.LogCategory.Character);
+                ConvaiLogger.Warn($"Error sending message data for NPC2NPC: {ex.Message}",
+                    ConvaiLogger.LogCategory.Character);
             }
         }
 
         public void EndOfResponseReceived()
         {
-            if (TryGetComponent(out ConvaiNPCAudioManager convaiNPCAudio)) convaiNPCAudio.OnCharacterTalkingChanged += SendFinalTranscriptToOtherNPC;
+            if (TryGetComponent(out ConvaiNPCAudioManager convaiNPCAudio))
+                convaiNPCAudio.OnCharacterTalkingChanged += SendFinalTranscriptToOtherNPC;
             ConversationManager.RelayMessage(_finalResponseText, this);
             _finalResponseText = "";
         }
@@ -178,19 +175,22 @@ namespace Convai.Scripts.Runtime.Features
                 if (!isTalking)
                 {
                     ConversationManager.SwitchSpeaker(this);
-                    if (TryGetComponent(out ConvaiNPCAudioManager convaiNPCAudio)) convaiNPCAudio.OnCharacterTalkingChanged -= SendFinalTranscriptToOtherNPC;
+                    if (TryGetComponent(out ConvaiNPCAudioManager convaiNPCAudio))
+                        convaiNPCAudio.OnCharacterTalkingChanged -= SendFinalTranscriptToOtherNPC;
                     HideSpeechBubble?.Invoke();
                 }
                 else
                 {
-                    ConvaiLogger.DebugLog($"{ConvaiNPC.characterName} is currently still talking. ", ConvaiLogger.LogCategory.Character);
+                    ConvaiLogger.DebugLog($"{ConvaiNPC.characterName} is currently still talking. ",
+                        ConvaiLogger.LogCategory.Character);
                 }
             }
         }
 
         public bool IsPlayerNearMe()
         {
-            bool result = Vector3.Distance(transform.position, playerTransform.position) < CONVERSATION_DISTANCE_THRESHOLD;
+            bool result = Vector3.Distance(transform.position, playerTransform.position) <
+                          CONVERSATION_DISTANCE_THRESHOLD;
             ConvaiLogger.Info($"Player is near {CharacterName}: {result}", ConvaiLogger.LogCategory.Character);
             return result;
         }
@@ -209,7 +209,10 @@ namespace Convai.Scripts.Runtime.Features
         private Transform playerTransform;
 
         // The distance from the NPC to the player when the NPC will start talking
-        [Tooltip("The distance from the NPC to the player when the NPC will start talking. Set to 0 to disable this feature. [Optional]")] [SerializeField] [Range(0f, 100f)]
+        [Tooltip(
+            "The distance from the NPC to the player when the NPC will start talking. Set to 0 to disable this feature. [Optional]")]
+        [SerializeField]
+        [Range(0f, 100f)]
         private float conversationDistanceThreshold = 5.0f;
 
         #endregion

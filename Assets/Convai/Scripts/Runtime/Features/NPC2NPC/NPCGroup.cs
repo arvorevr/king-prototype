@@ -28,6 +28,7 @@ namespace Convai.Scripts.Runtime.Features
             GroupNPC1 = groupNPC1;
             GroupNPC2 = groupNPC2;
             MaxMessageCount = maxMessageCount;
+            CurrentSpeaker = GroupNPC1;
         }
 
         public void Initialize(Action<bool, ConvaiGroupNPCController> vicinityChangedCallback)
