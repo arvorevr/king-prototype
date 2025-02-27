@@ -56,7 +56,8 @@ namespace Convai.Scripts.Runtime.Core
                 return;
             }
             
-            Ray ray = new(_mainCamera.transform.position, _mainCamera.transform.forward);
+            var cameraPosition = _mainCamera.transform.position + _mainCamera.transform.forward * 0.2f;
+            Ray ray = new(cameraPosition, _mainCamera.transform.forward);
             bool foundConvaiNPC = false;
 
             if (Physics.RaycastNonAlloc(ray, RaycastHits, rayLength) > 0)
@@ -99,7 +100,7 @@ namespace Convai.Scripts.Runtime.Core
                 return;
 
             Transform cameraTransform = _mainCamera.transform;
-            Vector3 rayOrigin = cameraTransform.position;
+            Vector3 rayOrigin = cameraTransform.position + cameraTransform.forward * 0.2f;
             Vector3 rayDirection = cameraTransform.forward;
 
             // Drawing the main ray

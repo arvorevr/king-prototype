@@ -49,9 +49,15 @@ namespace Convai.Scripts.Runtime.Features
         private ConvaiGRPCAPI _convaiManager;
         private GameObject _grabbedObject;
 
+        private Animator _animator;
+        private NavMeshAgent _navMeshAgent;
+
         // Awake is called when the script instance is being loaded
         private void Awake()
         {
+            _animator = GetComponent<Animator>();
+            _navMeshAgent = GetComponent<NavMeshAgent>();
+            
             // Find the global action settings object in the scene
             _convaiManager = FindObjectOfType<ConvaiGRPCAPI>();
             _interactablesData = FindObjectOfType<ConvaiInteractablesData>();
@@ -560,13 +566,12 @@ namespace Convai.Scripts.Runtime.Features
         {
             ActionStarted?.Invoke("Crouch", _currentNPC.gameObject);
             ConvaiLogger.DebugLog("Crouching!", ConvaiLogger.LogCategory.Actions);
-            Animator animator = _currentNPC.GetComponent<Animator>();
-            animator.CrossFadeInFixedTime(Animator.StringToHash("Crouch"), 0.1f);
+            _animator.CrossFadeInFixedTime(Animator.StringToHash("Crouch"), 0.1f);
 
             // Wait for the next frame to ensure the Animator has transitioned to the new state.
             yield return new WaitForSeconds(0.11f);
 
-            AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(0);
+            AnimatorClipInfo[] clipInfo = _animator.GetCurrentAnimatorClipInfo(0);
             if (clipInfo == null || clipInfo.Length == 0)
             {
                 ConvaiLogger.DebugLog("No animation clips found for crouch state!", ConvaiLogger.LogCategory.Actions);
@@ -585,7 +590,7 @@ namespace Convai.Scripts.Runtime.Features
             }
 
             yield return new WaitForSeconds(length);
-            animator.CrossFadeInFixedTime(Animator.StringToHash("Idle"), 0.1f);
+            _animator.CrossFadeInFixedTime(Animator.StringToHash("Idle"), 0.1f);
 
             yield return null;
             ActionEnded?.Invoke("Crouch", _currentNPC.gameObject);
@@ -603,18 +608,15 @@ namespace Convai.Scripts.Runtime.Features
             ConvaiLogger.DebugLog($"Moving to Target: {target.name}", ConvaiLogger.LogCategory.Actions);
             ActionStarted?.Invoke("MoveTo", target);
 
-            Animator animator = _currentNPC.GetComponent<Animator>();
-            NavMeshAgent navMeshAgent = _currentNPC.GetComponent<NavMeshAgent>();
-
-            SetupAnimationAndNavigation(animator, navMeshAgent);
+            SetupAnimationAndNavigation(_animator, _navMeshAgent);
 
             Vector3 targetDestination = CalculateTargetDestination(target);
-            navMeshAgent.SetDestination(targetDestination);
+            _navMeshAgent.SetDestination(targetDestination);
             yield return null;
 
-            yield return MoveTowardsTarget(target, navMeshAgent);
+            yield return MoveTowardsTarget(target, _navMeshAgent);
 
-            FinishMovement(animator, target);
+            FinishMovement(_animator, target);
             ConvaiNPCManager.Instance.StopRaycast = false;
         }
 
@@ -756,11 +758,8 @@ namespace Convai.Scripts.Runtime.Features
             // Log the action of picking up the target along with its name.
             ConvaiLogger.DebugLog($"Picking up Target: {target.name}", ConvaiLogger.LogCategory.Actions);
 
-            // Retrieve the Animator component from the current NPC.
-            Animator animator = _currentNPC.GetComponent<Animator>();
-
             // Start the "Picking Up" animation with a cross-fade transition.
-            animator.CrossFade(Animator.StringToHash("Picking Up"), 0.1f);
+            _animator.CrossFade(Animator.StringToHash("Picking Up"), 0.1f);
 
             // Wait for one second to ensure that the Animator has had time to transition to the "Picking Up" animation state.
             yield return new WaitForSeconds(1);
@@ -792,7 +791,7 @@ namespace Convai.Scripts.Runtime.Features
             }
 
             // Transition back to the "Idle" animation.
-            animator.CrossFade(Animator.StringToHash("Idle"), 0.4f);
+            _animator.CrossFade(Animator.StringToHash("Idle"), 0.4f);
 
             // Invoke the ActionEnded event with the "PickUp" action and the target GameObject.
             ActionEnded?.Invoke("PickUp", target);
@@ -818,13 +817,17 @@ namespace Convai.Scripts.Runtime.Features
             {
                 Drop(_grabbedObject);
             }
+            
+            if(Vector3.Distance(transform.position, target.transform.position) > _navMeshAgent.stoppingDistance)
+            {
+                yield return MoveTo(target);
+            }
 
             LookAtTarget(target);
 
             ConvaiLogger.DebugLog($"Grabbing Target: {target.name}", ConvaiLogger.LogCategory.Actions);
 
-            Animator animator = _currentNPC.GetComponent<Animator>();
-            animator.CrossFade(Animator.StringToHash("Grabbing"), 0.1f);
+            _animator.CrossFade(Animator.StringToHash("Grabbing"), 0.1f);
 
             yield return new WaitForSeconds(1);
 
@@ -857,7 +860,7 @@ namespace Convai.Scripts.Runtime.Features
                 inventory.Items.Add(target);
             }
 
-            animator.CrossFade(Animator.StringToHash("Idle"), 0.4f);
+            _animator.CrossFade(Animator.StringToHash("Idle"), 0.4f);
 
             ActionEnded?.Invoke("Grab", target);
         }
