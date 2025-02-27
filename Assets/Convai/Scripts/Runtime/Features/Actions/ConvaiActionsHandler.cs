@@ -607,12 +607,13 @@ namespace Convai.Scripts.Runtime.Features
             
             ConvaiLogger.DebugLog($"Moving to Target: {target.name}", ConvaiLogger.LogCategory.Actions);
             ActionStarted?.Invoke("MoveTo", target);
-
+            
             SetupAnimationAndNavigation(_animator, _navMeshAgent);
 
             Vector3 targetDestination = CalculateTargetDestination(target);
             _navMeshAgent.SetDestination(targetDestination);
-            yield return null;
+
+            yield return new WaitForSeconds(0.2f);
 
             yield return MoveTowardsTarget(target, _navMeshAgent);
 
@@ -669,6 +670,7 @@ namespace Convai.Scripts.Runtime.Features
                 if (navMeshAgent.velocity.sqrMagnitude < Mathf.Epsilon) yield return null;
 
                 RotateTowardsMovementDirection(navMeshAgent, rotationSpeed);
+
                 yield return null;
             }
         }
@@ -979,9 +981,9 @@ namespace Convai.Scripts.Runtime.Features
         {
             ActionStarted?.Invoke("Jump", _currentNPC.gameObject);
 
-            float jumpForce = 50f;
-            GetComponent<Rigidbody>().AddForce(new Vector3(0f, jumpForce, 0f), ForceMode.Impulse);
-            _currentNPC.GetComponent<Animator>().CrossFade(Animator.StringToHash("Dance"), 1);
+            // float jumpForce = 50f;
+            // GetComponent<Rigidbody>().AddForce(new Vector3(0f, jumpForce, 0f), ForceMode.Impulse);
+            _animator.SetTrigger( "Jumping");
 
             ActionEnded?.Invoke("Jump", _currentNPC.gameObject);
         }
