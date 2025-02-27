@@ -361,7 +361,7 @@ namespace Convai.Scripts.Runtime.Features
                     break;
                 
                 case ActionChoice.TalkTo:
-                    Talk(action.Target);
+                    yield return Talk(action.Target);
                     break;
                 
                 case ActionChoice.PutOn:
@@ -829,10 +829,7 @@ namespace Convai.Scripts.Runtime.Features
 
             _animator.CrossFade(Animator.StringToHash("Grabbing"), 0.1f);
 
-            yield return new WaitForSeconds(1);
-
-            float timeToReachObject = 1f;
-            yield return new WaitForSeconds(timeToReachObject);
+            yield return new WaitForSeconds(0.5f);
 
             if (!target.activeInHierarchy)
             {
@@ -865,12 +862,17 @@ namespace Convai.Scripts.Runtime.Features
             ActionEnded?.Invoke("Grab", target);
         }
         
-        private void Talk(GameObject target)
+        private IEnumerator Talk(GameObject target)
         {
             if (target == null)
             {
                 ConvaiLogger.DebugLog("Target is null! Exiting Talk coroutine.", ConvaiLogger.LogCategory.Actions);
-                return;
+                yield break;
+            }
+            
+            if(Vector3.Distance(transform.position, target.transform.position) > _navMeshAgent.stoppingDistance)
+            {
+                yield return MoveTo(target);
             }
 
             ConvaiLogger.DebugLog($"Talking to Target: {target.name}", ConvaiLogger.LogCategory.Actions);
@@ -890,7 +892,8 @@ namespace Convai.Scripts.Runtime.Features
                     _npcConversationManager.gameObject.SetActive(true);
                     _npcConversationManager.enabled = true;
                 }
-                
+
+                yield return new WaitForSeconds(0.1f);
                 // Look At Target
                 LookAtTarget(target);
             }
