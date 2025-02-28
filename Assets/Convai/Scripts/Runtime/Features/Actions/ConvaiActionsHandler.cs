@@ -613,7 +613,14 @@ namespace Convai.Scripts.Runtime.Features
             Vector3 targetDestination = CalculateTargetDestination(target);
             _navMeshAgent.SetDestination(targetDestination);
 
-            yield return new WaitForSeconds(0.2f);
+            yield return null;
+            
+            var recalculatedAttempts = 10;
+            while (recalculatedAttempts > 0 && _navMeshAgent.remainingDistance == 0)
+            {
+                recalculatedAttempts--;
+                yield return new WaitForSeconds(0.1f);
+            }
 
             yield return MoveTowardsTarget(target, _navMeshAgent);
 
